@@ -1,0 +1,20 @@
+{
+  "background_color": "#4caf50",
+  "description": "Introducing List Master, the simplest and most efficient grocery list app that's designed to streamline your shopping experience. With a focus on simplicity and functionality, List Master is the perfect tool to help you stay organized and save time during your grocery runs.",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Listmaster",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "ListMaster",
+  "start_url": "/",
+  "theme_color": "#51585e",
+  "categories": [
+    "food",
+    "shopping",
+    "utilities"
+  ],
+  "screenshots": [],
+  "icons": [],
+  "lang": "en"
+}
