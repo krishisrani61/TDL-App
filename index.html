@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #task-container {
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #task-header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        #task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        #task-input {
+            width: calc(100% - 40px);
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        #add-task-btn {
+            width: 40px;
+            height: 40px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="task-container">
+    <div id="task-header">TaskMaster</div>
+    <ul id="task-list"></ul>
+    <div class="task-item">
+        <input type="text" id="task-input" placeholder="Add a new task">
+        <button id="add-task-btn" onclick="addTask()">+</button>
+    </div>
+</div>
+
+<script>
+    function addTask() {
+        var taskInput = document.getElementById('task-input');
+        var taskList = document.getElementById('task-list');
+
+        if (taskInput.value.trim() !== '') {
+            var taskItem = document.createElement('li');
+            taskItem.className = 'task-item';
+            taskItem.innerHTML = '<input type="checkbox">' + taskInput.value.trim();
+            taskList.appendChild(taskItem);
+            taskInput.value = '';
+        }
+    }
+</script>
+
+</body>
+</html>
