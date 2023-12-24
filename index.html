@@ -1,101 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskMaster</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskmaster</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-        #task-container {
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    #taskList {
+      width: 300px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-        #task-header {
-            background-color: #3498db;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-        }
+    #taskInput {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
 
-        #task-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    #taskContainer {
+      max-height: 300px;
+      overflow-y: auto;
+    }
 
-        .task-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            font-size: 18px;
-        }
+    .taskItem {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
 
-        .task-item input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        #task-input {
-            width: calc(100% - 40px);
-            padding: 10px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-
-        #add-task-btn {
-            width: 40px;
-            height: 40px;
-            background-color: #2ecc71;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            outline: none;
-        }
-    </style>
+    .taskItem button {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
 
-<div id="task-container">
-    <div id="task-header">TaskMaster</div>
-    <ul id="task-list"></ul>
-    <div class="task-item">
-        <input type="text" id="task-input" placeholder="Add a new task">
-        <button id="add-task-btn" onclick="addTask()">+</button>
-    </div>
+<div id="taskList">
+  <h2>Taskmaster</h2>
+  <input type="text" id="taskInput" placeholder="Add a new task...">
+  <div id="taskContainer"></div>
 </div>
 
 <script>
-    function addTask() {
-        var taskInput = document.getElementById('task-input');
-        var taskList = document.getElementById('task-list');
+  // Function to add a new task
+  function addTask() {
+    var taskInput = document.getElementById('taskInput');
+    var taskContainer = document.getElementById('taskContainer');
 
-        if (taskInput.value.trim() !== '') {
-            var taskItem = document.createElement('li');
-            taskItem.className = 'task-item';
-            taskItem.innerHTML = '<input type="checkbox">' + taskInput.value.trim();
-            taskList.appendChild(taskItem);
-            taskInput.value = '';
-        }
+    if (taskInput.value.trim() !== '') {
+      var taskItem = document.createElement('div');
+      taskItem.className = 'taskItem';
+      taskItem.innerHTML = `
+        <span>${taskInput.value}</span>
+        <button onclick="removeTask(this)">Delete</button>
+      `;
+
+      taskContainer.appendChild(taskItem);
+      taskInput.value = '';
+
+      // Save tasks in cookies
+      saveTasks();
     }
+  }
+
+  // Function to remove a task
+  function removeTask(button) {
+    var taskItem = button.parentElement;
+    taskItem.remove();
+
+    // Save tasks in cookies
+    saveTasks();
+  }
+
+  // Function to save tasks in cookies
+  function saveTasks() {
+    var taskContainer = document.getElementById('taskContainer');
+    var tasks = [];
+
+    // Extract tasks from taskContainer
+    var taskItems = taskContainer.getElementsByClassName('taskItem');
+    for (var i = 0; i < taskItems.length; i++) {
+      var taskText = taskItems[i].getElementsByTagName('span')[0].innerText;
+      tasks.push(taskText);
+    }
+
+    // Save tasks in cookies
+    document.cookie = 'tasks=' + JSON.stringify(tasks);
+  }
+
+  // Function to load tasks from cookies
+  function loadTasks() {
+    var taskContainer = document.getElementById('taskContainer');
+    var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)tasks\s*=\s*([^;]*).*$)|^.*$/, "$1");
+
+    if (cookieValue) {
+      var tasks = JSON.parse(cookieValue);
+
+      for (var i = 0; i < tasks.length; i++) {
+        var taskItem = document.createElement('div');
+        taskItem.className = 'taskItem';
+        taskItem.innerHTML = `
+          <span>${tasks[i]}</span>
+          <button onclick="removeTask(this)">Delete</button>
+        `;
+
+        taskContainer.appendChild(taskItem);
+      }
+    }
+  }
+
+  // Load tasks when the page is loaded
+  window.onload = function() {
+    loadTasks();
+  };
 </script>
 
 </body>
